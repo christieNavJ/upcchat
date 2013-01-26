@@ -1,0 +1,38 @@
+<h1>Chat UPC</h1>
+
+
+  <ul id="chat_container">
+<% @messages.each do |message| %>
+  
+    <li><%= message.name %> dijo: <%= message.content %>
+    </li>     
+  
+<% end %>
+</ul>
+<%= render 'form' %>
+
+<script type="text/javascript">
+  Pusher.log = function(message){
+    if(window.console && window.console.log)window.console.log(message);
+
+  };
+
+  WEB_SOCKET_DEBUG = true;
+
+  var pusher = new Pusher('5380f001a63bb1fa5e24')
+  var channel = pusher.subscribe('DEW2013');
+
+  channel.bind('message:create', function(data){
+    var message = "<li id='message_"+ data.id +"'>"
+        message += data.name+ ":"+data.content
+        message += "</li>"
+
+        $("#chat_container").append(message);
+        $("#message_content").val("");
+        $("#message_content").focus();
+
+
+  });
+
+</script>
+
